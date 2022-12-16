@@ -4,6 +4,7 @@ using Sources.Factories;
 using Sources.ScriptableObjects;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Sources.Bootstrappers
 {
@@ -24,6 +25,7 @@ namespace Sources.Bootstrappers
         [SerializeField] private ShopUIConfig _shopUIConfig;
         [SerializeField] private TMP_Text _coinsCounter;
         [SerializeField] private float _counterSmooth;
+        [SerializeField] private Image _slimeHealthBar;
 
         [Space]
 
@@ -42,10 +44,11 @@ namespace Sources.Bootstrappers
 
             _systems
                 .Add(new SlimeInit(_slimeSample, _slimeTransform, _shotPoint))
+                .Add(new SliderHealthBar(_slimeHealthBar, _slimeSample))
                 .Add(new CoinsCounter(_playerStats, _counterSmooth, _coinsCounter, this))
                 .Add(new ShopUI(_shopUIConfig, _playerStats, _shopSample, _slimeSample, this))
                 .Add(new ZombiesSpawn(new ZombieFactory(_zombieSample.Prefab), _slimeTransform, _zombieSpawnPoints, _playerStats, _zombieSample))
-                .Add(new ZombieMovement(_world, _slimeTransform))
+                .Add(new ZombieMovement(_world, _slimeTransform, _zombieSample))
                 .Add(new SlimeShoting(_world, _slimeSample, _slimeTransform, new BulletFactory(_slimeSample.BulletPrefab)))
                 .Add(new BulletMovement())
                 .Init();
@@ -58,6 +61,8 @@ namespace Sources.Bootstrappers
 
         private void OnDestroy()
         {
+            StopAllCoroutines();
+
             _systems.Destroy();
             _systems = null;
 

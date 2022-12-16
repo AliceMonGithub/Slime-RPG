@@ -1,10 +1,13 @@
 ﻿using Leopotam.EcsLite;
+using System;
 using UnityEngine;
 
 namespace Sources.Ecs
 {
     internal class BulletMovement : IEcsRunSystem
     {
+        public static event Action<int> OnHit;
+
         public void Run(IEcsSystems systems)
         {
             EcsWorld world = systems.GetWorld();
@@ -25,7 +28,7 @@ namespace Sources.Ecs
                 {
                     TryTakeDamage(bullet.Damage, bullet.Target, world);
 
-                    Object.Destroy(transformable.Transform.gameObject);
+                    GameObject.Destroy(transformable.Transform.gameObject);
 
                     world.DelEntity(entity);
 
@@ -52,7 +55,10 @@ namespace Sources.Ecs
                 {
                     ref Health health = ref healthPool.Get(entity);
 
-                    health.DecreaseHealth(value);
+                    if(health.DecreaseHealth(value) == false)
+                    {
+                        OnHit?.Invoke(entity);
+                    }
                 }
             }
         }

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ffb55caf70905d41879fbd12c5efb68, type: 3}
   m_Name: ShopSample
   m_EditorClassIdentifier: 
-  _damageUpgradeIncrease: 50
-  _fireRateUpgradeIncrease: 50
-  _startDamageUpgradeCost: 100
-  _startFireRateUpradeCost: 90
-  _startDamageUpgradeValue: 10
-  _startFireRateUpgradeValue: 1
+  _damageUpgradeIncrease: 75
+  _fireRateUpgradeIncrease: 350
+  _startDamageUpgradeCost: 50
+  _startFireRateUpradeCost: 200
+  _startDamageUpgradeValue: 1
+  _startFireRateUpgradeValue: 0.1
   _startDamageLevel: 1
-  _startFireRateLevel: 5
+  _startFireRateLevel: 1

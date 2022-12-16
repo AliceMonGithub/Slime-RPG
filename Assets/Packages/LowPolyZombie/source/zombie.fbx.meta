@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4c3bcb860cb580844a2310f78ef998bb
+guid: 420447cca139c8744ae83d1bd4173613
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -15,12 +15,6 @@ ModelImporter:
   - first:
       74: 8349542763059015795
     second: Armature|Walk
-  - first:
-      74: 3800721468275536773
-    second: Armature|Walk (2)
-  - first:
-      74: 3800721468275536773
-    second: Armature|Walk Loop
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -51,8 +45,8 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|Walk Loop
-      takeName: Armature|Walk
+      name: Armature|Attack
+      takeName: Armature|Attack
       internalID: 0
       firstFrame: 0
       lastFrame: 23
@@ -149,7 +143,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

@@ -10,6 +10,10 @@ namespace Sources.Ecs
         public GameObject GameObject;
         public int Entity;
 
+        public float CurrentRegeneration;
+
+        public int MaxHealth;
+
         private int _value;
         private int _nextDamage;
 
@@ -18,17 +22,23 @@ namespace Sources.Ecs
 
         public void IncreaseHealth(int value)
         {
+            if (_value + value > MaxHealth) return;
+
             _value += value;
 
             OnHealthValueChanged?.Invoke(this);
         }
 
-        public void DecreaseHealth(int value)
+        public bool DecreaseHealth(int value)
         {
             _value -= value;
             _nextDamage -= value;
 
             OnHealthValueChanged?.Invoke(this);
+
+            if (_value <= 0) return true;
+
+            return false;
         }
 
         public void IncreaseNextDamage(int value)

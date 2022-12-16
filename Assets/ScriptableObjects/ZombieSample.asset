@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fde68c81d273d43b9a16cf2131ad0e, type: 3}
   m_Name: ZombieSample
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 8304587312362914598, guid: 3e660650b90892a4c858074bcda7e5f5, type: 3}
-  _health: 10
-  _spawnRate: 0.2
+  _prefab: {fileID: 3804281781143168797, guid: 3e660650b90892a4c858074bcda7e5f5, type: 3}
+  _maxHealth: 10
+  _killAward: 25
+  _damage: 2
+  _fireRate: 1
+  _spawnRate: 1.75
   _maxSpeed: 2.5
   _smooth: 1
   _stopDistance: 1.4

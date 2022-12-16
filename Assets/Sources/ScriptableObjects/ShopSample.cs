@@ -10,7 +10,7 @@ namespace Sources.Properties
         public Action<int, int> OnFireRateUpgradeCostChanged { get; set; }
 
         public Action<int, int> OnDamageUpgradeValueChanged { get; set; }
-        public Action<int, int> OnFireRateUpgradeValueChanged { get; set; }
+        public Action<float, float> OnFireRateUpgradeValueChanged { get; set; }
 
         public Action<int, int> OnDamageLevelChanged { get; set; }
         public Action<int, int> OnFireRateLevelChanged { get; set; }
@@ -22,7 +22,7 @@ namespace Sources.Properties
         public int StartFireRateUpgradeCost { get; }
 
         public int StartDamageUpgradeValue{ get; }
-        public int StartFireRateUpgradeValue { get; }
+        public float StartFireRateUpgradeValue { get; }
 
         public int StartDamageLevel { get; }
         public int StartFireRateLevel { get; }
@@ -31,7 +31,7 @@ namespace Sources.Properties
         public int FireRateUpgradeCost { get; }
 
         public int DamageUpgradeValue { get; }
-        public int FireRateUpgradeValue { get; }
+        public float FireRateUpgradeValue { get; }
 
         public int DamageLevel { get; }
         public int FireRateLevel { get; }
@@ -40,7 +40,7 @@ namespace Sources.Properties
         public void IncreaseFireRateUpgradeCost(int value);
 
         public void IncreaseDamageUpgradeValue(int value);
-        public void IncreaseFireRateUpgradeValue(int value);
+        public void IncreaseFireRateUpgradeValue(float value);
 
         public void IncreaseDamageLevel(int value);
         public void IncreaseFireRateLevel(int value);
@@ -63,7 +63,7 @@ namespace Sources.ScriptableObjects
         [Space]
 
         [SerializeField] private int _startDamageUpgradeValue;
-        [SerializeField] private int _startFireRateUpgradeValue;
+        [SerializeField] private float _startFireRateUpgradeValue;
 
         [Space]
 
@@ -74,7 +74,7 @@ namespace Sources.ScriptableObjects
         [NonSerialized] private int _fireRateUpgradeCost;
 
         [NonSerialized] private int _damageUpgradeValue;
-        [NonSerialized] private int _fireRateUpgradeValue;
+        [NonSerialized] private float _fireRateUpgradeValue;
 
         [NonSerialized] private int _damageLevel;
         [NonSerialized] private int _fireRateLevel;
@@ -82,7 +82,7 @@ namespace Sources.ScriptableObjects
         public Action<int, int> OnDamageUpgradeCostChanged { get; set; }
         public Action<int, int> OnFireRateUpgradeCostChanged { get; set; }
         public Action<int, int> OnDamageUpgradeValueChanged { get; set; }
-        public Action<int, int> OnFireRateUpgradeValueChanged { get; set; }
+        public Action<float, float> OnFireRateUpgradeValueChanged { get; set; }
         public Action<int, int> OnDamageLevelChanged { get; set; }
         public Action<int, int> OnFireRateLevelChanged { get; set; }
 
@@ -93,7 +93,7 @@ namespace Sources.ScriptableObjects
         public int StartFireRateUpgradeCost => _startFireRateUpradeCost;
 
         public int StartDamageUpgradeValue => _startDamageUpgradeValue;
-        public int StartFireRateUpgradeValue => _startFireRateUpgradeValue;
+        public float StartFireRateUpgradeValue => _startFireRateUpgradeValue;
 
         public int StartDamageLevel => _startDamageLevel;
         public int StartFireRateLevel => _startFireRateLevel;
@@ -102,7 +102,7 @@ namespace Sources.ScriptableObjects
         public int FireRateUpgradeCost => _fireRateUpgradeCost;
 
         public int DamageUpgradeValue => _damageUpgradeValue;
-        public int FireRateUpgradeValue => _fireRateUpgradeValue;
+        public float FireRateUpgradeValue => _fireRateUpgradeValue;
 
         public int DamageLevel => _damageLevel;
         public int FireRateLevel => _fireRateLevel;
@@ -128,7 +128,7 @@ namespace Sources.ScriptableObjects
             _damageUpgradeValue += value;
         }
 
-        public void IncreaseFireRateUpgradeValue(int value)
+        public void IncreaseFireRateUpgradeValue(float value)
         {
             OnFireRateUpgradeValueChanged?.Invoke(_fireRateUpgradeValue, _fireRateUpgradeValue + value);
 

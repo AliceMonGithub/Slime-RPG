@@ -5,6 +5,7 @@ namespace Sources.Ecs
     internal struct Bullet
     {
         public Transform Target;
+        
 
         public int Damage;
 

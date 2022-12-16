@@ -57,8 +57,6 @@ namespace Sources.Ecs
             EcsPool<Transformable> transformablePool = world.GetPool<Transformable>();
             EcsPool<Health> healthPool = world.GetPool<Health>();
 
-            _playerStats.IncreaseCoins(100);
-
             ref ZombieMoveConfig zombie = ref zombiesPool.Add(zombieEntity);
             ref Transformable transformable = ref transformablePool.Add(zombieEntity);
             ref Health health = ref healthPool.Add(zombieEntity);
@@ -66,17 +64,25 @@ namespace Sources.Ecs
             zombie.Smooth = _zombieSample.Smooth;
             zombie.MaxSpeed = _zombieSample.MaxSpeed;
 
+            zombie.AttackFireRate = _zombieSample.FireRate;
             zombie.StopDistance = _zombieSample.StopDistance;
             zombie.Velosity = Vector3.zero;
 
-            transformable.Transform = _factory.Create(RandomSpawnPoint.position);
-            transformable.Transform.LookAt(_target.position * -1, Vector3.up);
+            zombie.Provider = _factory.Create(RandomSpawnPoint.position);
+            transformable.Transform = zombie.Provider.Root;
 
-            health.IncreaseHealth(_zombieSample.Health);
+            transformable.Transform.LookAt(_target.position);
+            
+            Vector3 rotation = transformable.Transform.eulerAngles;
+
+            rotation.y = 90;
+
+            transformable.Transform.eulerAngles = rotation;
+
+            health.MaxHealth = _zombieSample.MaxHealth;
+            health.IncreaseHealth(_zombieSample.MaxHealth);
             health.Entity = zombieEntity;
             health.GameObject = transformable.Transform.gameObject;
-
-            Debug.Log(health.Value);
 
             health.OnHealthValueChanged += TryDie;
         }
@@ -88,6 +94,19 @@ namespace Sources.Ecs
                 Object.Destroy(health.GameObject);
 
                 _ecsWorld.DelEntity(health.Entity);
+
+                _playerStats.IncreaseCoins(_zombieSample.KillAward);
+
+                EcsFilter slimeFilter = _ecsWorld.Filter<SlimeShotConfig>().Inc<Health>().End();
+
+                EcsPool<Health> healthPool = _ecsWorld.GetPool<Health>();
+
+                foreach (int entity in slimeFilter)
+                {
+                    ref Health slimeHealth = ref healthPool.Get(entity);
+
+                    slimeHealth.IncreaseHealth(1);
+                }
             }
         }
     }

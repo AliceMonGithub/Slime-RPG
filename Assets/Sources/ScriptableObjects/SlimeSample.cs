@@ -9,8 +9,12 @@ namespace Sources.Properties
         public Action<int, int> OnDamageValueChanged { get; set; }
         public Action<float, float> OnFireRateValueChanged { get; set; }
 
+        public int MaxHealth { get; }
         public int StartDamage { get; }
         public float StartFireRate { get; }
+
+        public float RegenerationValue { get; }
+        public float RegenerationRate { get; }
 
         public Transform BulletPrefab { get; }
         public float BulletSpeed { get; }
@@ -25,8 +29,14 @@ namespace Sources.ScriptableObjects
     [CreateAssetMenu]
     internal class SlimeSample : ScriptableObject, ISlime
     {
+        [SerializeField] private int _maxHealth;
         [SerializeField] private int _startDamage;
         [SerializeField] private float _startFireRate;
+
+        [Space]
+
+        [SerializeField] private float _regenerationValue;
+        [SerializeField] private float _regenerationRate;
 
         [Space]
 
@@ -39,8 +49,12 @@ namespace Sources.ScriptableObjects
         public Action<int, int> OnDamageValueChanged { get; set; }
         public Action<float, float> OnFireRateValueChanged { get; set; }
 
+        public int MaxHealth => _maxHealth;
         public int StartDamage => _startDamage;
         public float StartFireRate => _startFireRate;
+
+        public float RegenerationValue => _regenerationValue;
+        public float RegenerationRate => _regenerationRate;
 
         public Transform BulletPrefab => _bulletPrefab;
         public float BulletSpeed => _bulletSpeed;

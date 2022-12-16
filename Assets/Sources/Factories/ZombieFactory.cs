@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sources.Providers;
+using UnityEngine;
 
 namespace Sources.Factories
 {
@@ -9,14 +10,14 @@ namespace Sources.Factories
 
     internal class ZombieFactory
     {
-        private readonly Transform _prefab;
+        private readonly ZombieProvider _prefab;
 
-        public ZombieFactory(Transform prefab)
+        public ZombieFactory(ZombieProvider prefab)
         {
             _prefab = prefab;
         }
 
-        public Transform Create(Vector3 position)
+        public ZombieProvider Create(Vector3 position)
         {
             return Object.Instantiate(_prefab, position, Quaternion.identity);
         }

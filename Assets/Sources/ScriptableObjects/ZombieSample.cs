@@ -1,14 +1,18 @@
 ﻿using Sources.Properties;
+using Sources.Providers;
 using UnityEngine;
 
 namespace Sources.Properties
 {
     internal interface IZombie
     {
-        public Transform Prefab { get; }
+        public ZombieProvider Prefab { get; }
 
-        public int Health { get; }
+        public int MaxHealth { get; }
+        public int KillAward { get; }
 
+        public int Damage { get; }
+        public float FireRate { get; }
         public float SpawnRate { get; }
 
         public float MaxSpeed { get; }
@@ -23,14 +27,17 @@ namespace Sources.ScriptableObjects
     [CreateAssetMenu]
     internal class ZombieSample : ScriptableObject, IZombie
     {
-        [SerializeField] private Transform _prefab;
+        [SerializeField] private ZombieProvider _prefab;
 
         [Space]
 
-        [SerializeField] private int _health;
+        [SerializeField] private int _maxHealth;
+        [SerializeField] private int _killAward;
 
         [Space]
 
+        [SerializeField] private int _damage;
+        [SerializeField] private float _fireRate;
         [SerializeField] private float _spawnRate;
 
         [Space]
@@ -40,10 +47,13 @@ namespace Sources.ScriptableObjects
 
         [SerializeField] private float _stopDistance;
 
-        public Transform Prefab => _prefab;
+        public ZombieProvider Prefab => _prefab;
 
-        public int Health => _health;
+        public int MaxHealth => _maxHealth;
+        public int KillAward => _killAward;
 
+        public int Damage => _damage;
+        public float FireRate => _fireRate;
         public float SpawnRate => _spawnRate;
 
         public float MaxSpeed => _maxSpeed;
