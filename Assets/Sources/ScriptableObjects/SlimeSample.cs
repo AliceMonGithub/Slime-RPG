@@ -13,7 +13,7 @@ namespace Sources.Properties
         public int StartDamage { get; }
         public float StartFireRate { get; }
 
-        public float RegenerationValue { get; }
+        public int RegenerationValue { get; }
         public float RegenerationRate { get; }
 
         public Transform BulletPrefab { get; }
@@ -35,7 +35,7 @@ namespace Sources.ScriptableObjects
 
         [Space]
 
-        [SerializeField] private float _regenerationValue;
+        [SerializeField] private int _regenerationValue;
         [SerializeField] private float _regenerationRate;
 
         [Space]
@@ -53,7 +53,7 @@ namespace Sources.ScriptableObjects
         public int StartDamage => _startDamage;
         public float StartFireRate => _startFireRate;
 
-        public float RegenerationValue => _regenerationValue;
+        public int RegenerationValue => _regenerationValue;
         public float RegenerationRate => _regenerationRate;
 
         public Transform BulletPrefab => _bulletPrefab;

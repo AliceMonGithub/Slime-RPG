@@ -13,6 +13,7 @@ namespace Sources.Ecs
     {
         [SerializeField] private Button _damageUpgrade;
         [SerializeField] private Button _fireRateUpgrade;
+        [SerializeField] private Button _maxHealthUpgrade;
 
         [Space]
 
@@ -22,34 +23,43 @@ namespace Sources.Ecs
 
         [SerializeField] private TMP_Text _damageCounter;
         [SerializeField] private TMP_Text _fireRateCounter;
+        [SerializeField] private TMP_Text _maxHealthCounter;
 
         [Space]
 
         [SerializeField] private TMP_Text _damageLevelCounter;
         [SerializeField] private TMP_Text _fireRateLevelCounter;
+        [SerializeField] private TMP_Text _maxHealthLevelCounter;
 
         [SerializeField] private TMP_Text _damageValueCounter;
         [SerializeField] private TMP_Text _fireRateValueCounter;
+        [SerializeField] private TMP_Text _maxHealthValueCounter;
 
         [SerializeField] private TMP_Text _damageUpgradeCostCounter;
         [SerializeField] private TMP_Text _fireRateUpgradeCostCounter;
+        [SerializeField] private TMP_Text _maxHealthUpgradeCostCounter;
 
         public Button DamageUpgrade => _damageUpgrade;
         public Button FireRateUpgrade => _fireRateUpgrade;
+        public Button MaxHealthUpgrade => _maxHealthUpgrade;
 
         public float CountersSmooth => _countersSmooth;
 
         public TMP_Text DamageCounter => _damageCounter;
         public TMP_Text FireRateCounter => _fireRateCounter;
+        public TMP_Text MaxHealthCounter => _maxHealthCounter;
 
         public TMP_Text DamageLevelCounter => _damageLevelCounter;
         public TMP_Text FireRateLevelCounter => _fireRateLevelCounter;
+        public TMP_Text MaxHealthLevelCounter => _maxHealthLevelCounter;
 
         public TMP_Text DamageValueCounter => _damageValueCounter;
         public TMP_Text FireRateValueCounter => _fireRateValueCounter;
+        public TMP_Text MaxHealthValueCounter => _maxHealthValueCounter;
 
         public TMP_Text DamageUpgradeCostCounter => _damageUpgradeCostCounter;
         public TMP_Text FireRateUpgradeCostCounter => _fireRateUpgradeCostCounter;
+        public TMP_Text MaxHealthUpgradeCostCounter => _maxHealthUpgradeCostCounter;
     }
 
     internal class ShopUI : IEcsInitSystem
@@ -79,37 +89,48 @@ namespace Sources.Ecs
         {
             _ecsWorld = systems.GetWorld();
 
-            EcsFilter slimesFilter = _ecsWorld.Filter<SlimeShotConfig>().End();
-            EcsPool<SlimeShotConfig> pool = _ecsWorld.GetPool<SlimeShotConfig>();
+            EcsFilter slimesFilter = _ecsWorld.Filter<SlimeShotConfig>().Inc<Health>().End();
+            EcsPool<SlimeShotConfig> slimePool = _ecsWorld.GetPool<SlimeShotConfig>();
+            EcsPool<Health> healthPool = _ecsWorld.GetPool<Health>();
 
             foreach (int entity in slimesFilter)
             {
-                ref SlimeShotConfig slime = ref pool.Get(entity);
+                ref SlimeShotConfig slime = ref slimePool.Get(entity);
+                ref Health health = ref healthPool.Get(entity);
 
                 UpdateDamageCounter(0, slime.Damage);
                 UpdateFireRateCounter(0, slime.FireRate);
+                UpdateMaxHealthCounter(0, health.MaxHealth);
 
                 slime.OnDamageValueChanged += UpdateDamageCounter;
                 slime.OnFireRateValueChanged += UpdateFireRateCounter;
+
+                health.OnMaxHealthValueChanged += UpdateMaxHealthCounter;
             }
 
             _shop.OnDamageUpgradeCostChanged += UpdateDamageCostCounter;
             _shop.OnFireRateUpgradeCostChanged += UpdateFireRateCostCounter;
+            _shop.OnMaxHealthUpgradeCostChanged += UpdateMaxHealthCostCounter;
 
             _shop.OnDamageLevelChanged += UpdateDamageLevelCounter;
             _shop.OnFireRateLevelChanged += UpdateFireRateLevelCounter;
+            _shop.OnMaxHealthLevelChanged += UpdateMaxHealthLevelCounter;
 
             _shop.IncreaseDamageUpgradeCost(_shop.StartDamageUpgradeCost);
             _shop.IncreaseFireRateUpgradeCost(_shop.StartFireRateUpgradeCost);
+            _shop.IncreaseMaxHealthUpgradeCost(_shop.StartMaxHealthUpgradeCost);
 
             _shop.IncreaseDamageUpgradeValue(_shop.StartDamageUpgradeValue);
             _shop.IncreaseFireRateUpgradeValue(_shop.StartFireRateUpgradeValue);
+            _shop.IncreaseMaxHealthUpgradeValue(_shop.StartMaxHealthUpgradeValue);
 
             _shop.IncreaseDamageLevel(_shop.StartDamageLevel);
             _shop.IncreaseFireRateLevel(_shop.StartFireRateLevel);
+            _shop.IncreaseMaxHealthLevel(_shop.StartMaxHealthLevel);
 
             _config.DamageUpgrade.onClick.AddListener(TryUpgradeDamage);
             _config.FireRateUpgrade.onClick.AddListener(TryUpgradeFireRate);
+            _config.MaxHealthUpgrade.onClick.AddListener(TryUpgradeMaxHealth);
         }
 
         private void TryUpgradeDamage()
@@ -154,6 +175,26 @@ namespace Sources.Ecs
             }
         }
 
+        private void TryUpgradeMaxHealth()
+        {
+            if(_shop.MaxHealthUpgradeCost <= _playerStats.Coins)
+            {
+                EcsFilter slimesFilter = _ecsWorld.Filter<SlimeShotConfig>().Inc<Health>().End();
+                EcsPool<Health> pool = _ecsWorld.GetPool<Health>();
+
+                foreach (int entity in slimesFilter)
+                {
+                    ref Health health = ref pool.Get(entity);
+
+                    health.IncreaseMaxHealth(_shop.MaxHealthUpgradeValue);
+                }
+
+                _playerStats.DecreaseCoins(_shop.MaxHealthUpgradeCost);
+                _shop.IncreaseMaxHealthLevel(1);
+                _shop.IncreaseMaxHealthUpgradeCost(_shop.MaxHealthUpgradeIncrease);
+            }
+        }
+
         private void UpdateDamageCounter(int oldValue, int newValue)
         {
             _coroutineRunner.StopCoroutine(SmoothCounter(_config.DamageCounter, newValue, oldValue));
@@ -166,6 +207,13 @@ namespace Sources.Ecs
             _coroutineRunner.StopCoroutine(SmoothCounter(_config.FireRateCounter, newValue, oldValue));
 
             _coroutineRunner.InvokeCoroutine(SmoothCounter(_config.FireRateCounter, newValue, oldValue));
+        }
+
+        private void UpdateMaxHealthCounter(int oldValue, int newValue)
+        {
+            _coroutineRunner.StopCoroutine(SmoothCounter(_config.MaxHealthCounter, newValue, oldValue));
+
+            _coroutineRunner.InvokeCoroutine(SmoothCounter(_config.MaxHealthCounter, newValue, oldValue));
         }
 
         private void UpdateDamageCostCounter(int oldValue, int newValue)
@@ -182,6 +230,13 @@ namespace Sources.Ecs
             _coroutineRunner.InvokeCoroutine(SmoothCounter(_config.FireRateUpgradeCostCounter, newValue, oldValue));
         }
 
+        private void UpdateMaxHealthCostCounter(int oldValue, int newValue)
+        {
+            _coroutineRunner.StopCoroutine(SmoothCounter(_config.MaxHealthUpgradeCostCounter, newValue, oldValue));
+
+            _coroutineRunner.InvokeCoroutine(SmoothCounter(_config.MaxHealthUpgradeCostCounter, newValue, oldValue));
+        }
+
         private void UpdateDamageLevelCounter(int oldValue, int newValue)
         {
             _coroutineRunner.StopCoroutine(SmoothCounter(_config.DamageLevelCounter, newValue, oldValue));
@@ -194,6 +249,13 @@ namespace Sources.Ecs
             _coroutineRunner.StopCoroutine(SmoothCounter(_config.FireRateLevelCounter, newValue, oldValue));
 
             _coroutineRunner.InvokeCoroutine(SmoothCounter(_config.FireRateLevelCounter, newValue, oldValue));
+        }
+
+        private void UpdateMaxHealthLevelCounter(int oldValue, int newValue)
+        {
+            _coroutineRunner.StopCoroutine(SmoothCounter(_config.MaxHealthLevelCounter, newValue, oldValue));
+
+            _coroutineRunner.InvokeCoroutine(SmoothCounter(_config.MaxHealthLevelCounter, newValue, oldValue));
         }
 
         private IEnumerator SmoothCounter(TMP_Text counter, int endValue, int startValue)
@@ -220,7 +282,7 @@ namespace Sources.Ecs
             {
                 time += Time.deltaTime / _config.CountersSmooth;
 
-                counter.text = Mathf.Lerp(startValue, endValue, time).ToString();
+                counter.text = Math.Round(Mathf.Lerp(startValue, endValue, time), 2).ToString();
 
                 yield return new WaitForEndOfFrame();
             }

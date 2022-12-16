@@ -7,6 +7,7 @@ namespace Sources.Properties
     internal interface IZombie
     {
         public ZombieProvider Prefab { get; }
+        public GameObject DamagePopup { get; }
 
         public int MaxHealth { get; }
         public int KillAward { get; }
@@ -28,6 +29,7 @@ namespace Sources.ScriptableObjects
     internal class ZombieSample : ScriptableObject, IZombie
     {
         [SerializeField] private ZombieProvider _prefab;
+        [SerializeField] private GameObject _damagePopup;
 
         [Space]
 
@@ -48,6 +50,7 @@ namespace Sources.ScriptableObjects
         [SerializeField] private float _stopDistance;
 
         public ZombieProvider Prefab => _prefab;
+        public GameObject DamagePopup => _damagePopup;
 
         public int MaxHealth => _maxHealth;
         public int KillAward => _killAward;

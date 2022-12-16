@@ -14,9 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageUpgradeIncrease: 75
   _fireRateUpgradeIncrease: 350
+  _maxHealthUpgradeIncrease: 200
   _startDamageUpgradeCost: 50
   _startFireRateUpradeCost: 200
+  _startMaxHealthUpgradeCost: 150
   _startDamageUpgradeValue: 1
   _startFireRateUpgradeValue: 0.1
+  _startMaxHealthUpgradeValue: 2
   _startDamageLevel: 1
   _startFireRateLevel: 1
+  _startMaxHealthLevel: 1

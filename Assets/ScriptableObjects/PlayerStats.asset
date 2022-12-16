@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f0895d3610987d48b134a0f38b09a54, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  _startCoins: 200
+  _startCoins: 25

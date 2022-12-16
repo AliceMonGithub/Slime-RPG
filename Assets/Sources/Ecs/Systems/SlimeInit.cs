@@ -42,7 +42,7 @@ namespace Sources.Ecs
 
             transformable.Transform = _slimeTransform;
 
-            health.MaxHealth = _slimeSample.MaxHealth;
+            health.IncreaseMaxHealth(_slimeSample.MaxHealth);
             health.IncreaseHealth(health.MaxHealth);
         }
     }

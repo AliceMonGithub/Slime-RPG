@@ -41,6 +41,13 @@ namespace Sources.Ecs
                 ref Health health = ref _healthPool.Get(entity);
 
                 health.CurrentRegeneration += Time.deltaTime;
+
+                if(health.CurrentRegeneration >= _slimeSample.RegenerationRate)
+                {
+                    health.IncreaseHealth(_slimeSample.RegenerationValue);
+
+                    health.CurrentRegeneration = 0;
+                }
             }
         }
 

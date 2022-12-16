@@ -79,7 +79,7 @@ namespace Sources.Ecs
 
             transformable.Transform.eulerAngles = rotation;
 
-            health.MaxHealth = _zombieSample.MaxHealth;
+            health.IncreaseMaxHealth(_zombieSample.MaxHealth);
             health.IncreaseHealth(_zombieSample.MaxHealth);
             health.Entity = zombieEntity;
             health.GameObject = transformable.Transform.gameObject;
@@ -97,16 +97,16 @@ namespace Sources.Ecs
 
                 _playerStats.IncreaseCoins(_zombieSample.KillAward);
 
-                EcsFilter slimeFilter = _ecsWorld.Filter<SlimeShotConfig>().Inc<Health>().End();
+                //EcsFilter slimeFilter = _ecsWorld.Filter<SlimeShotConfig>().Inc<Health>().End();
 
-                EcsPool<Health> healthPool = _ecsWorld.GetPool<Health>();
+                //EcsPool<Health> healthPool = _ecsWorld.GetPool<Health>();
 
-                foreach (int entity in slimeFilter)
-                {
-                    ref Health slimeHealth = ref healthPool.Get(entity);
+                //foreach (int entity in slimeFilter)
+                //{
+                //    ref Health slimeHealth = ref healthPool.Get(entity);
 
-                    slimeHealth.IncreaseHealth(1);
-                }
+                //    slimeHealth.IncreaseHealth(1);
+                //}
             }
         }
     }
