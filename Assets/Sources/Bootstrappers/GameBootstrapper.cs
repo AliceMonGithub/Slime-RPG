@@ -2,18 +2,28 @@
 using Sources.Ecs;
 using Sources.Factories;
 using Sources.ScriptableObjects;
+using TMPro;
 using UnityEngine;
 
 namespace Sources.Bootstrappers
 {
-    internal class GameBootstrapper : MonoBehaviour
+    public class GameBootstrapper : MonoBehaviour, ICoroutineRunner
     {
         [SerializeField] private Transform[] _zombieSpawnPoints;
 
         [Space]
 
-        [SerializeField] private ZombieSample _zombieProperties;
-        [SerializeField] private SlimeSample _slimeProperties;
+        [SerializeField] private ZombieSample _zombieSample;
+        [SerializeField] private SlimeSample _slimeSample;
+        [SerializeField] private ShopSample _shopSample;
+
+        [SerializeField] private PlayerStats _playerStats;
+
+        [Space]
+
+        [SerializeField] private ShopUIConfig _shopUIConfig;
+        [SerializeField] private TMP_Text _coinsCounter;
+        [SerializeField] private float _counterSmooth;
 
         [Space]
 
@@ -31,12 +41,13 @@ namespace Sources.Bootstrappers
             _systems = new EcsSystems(_world);
 
             _systems
-                .Add(new SlimeInit(_slimeProperties, _slimeTransform, _shotPoint))
-                .Add(new ZombiesSpawn(new ZombieFactory(_zombieProperties.Prefab), _slimeTransform, _zombieSpawnPoints, _zombieProperties))
+                .Add(new SlimeInit(_slimeSample, _slimeTransform, _shotPoint))
+                .Add(new CoinsCounter(_playerStats, _counterSmooth, _coinsCounter, this))
+                .Add(new ShopUI(_shopUIConfig, _playerStats, _shopSample, _slimeSample, this))
+                .Add(new ZombiesSpawn(new ZombieFactory(_zombieSample.Prefab), _slimeTransform, _zombieSpawnPoints, _playerStats, _zombieSample))
                 .Add(new ZombieMovement(_world, _slimeTransform))
-                .Add(new SlimeShoting(_world, _slimeProperties, _slimeTransform, new BulletFactory(_slimeProperties.BulletPrefab)))
+                .Add(new SlimeShoting(_world, _slimeSample, _slimeTransform, new BulletFactory(_slimeSample.BulletPrefab)))
                 .Add(new BulletMovement())
-                //.Add(new SlimeShoting(_world, _slimeProperties, _slimeTransform, new BulletFactory(_slimeProperties.BulletPrefab))
                 .Init();
         }
 
@@ -52,6 +63,16 @@ namespace Sources.Bootstrappers
 
             _world.Destroy();
             _world = null;
+        }
+
+        Coroutine ICoroutineRunner.InvokeCoroutine(System.Collections.IEnumerator enumerator)
+        {
+            return StartCoroutine(enumerator);
+        }
+
+        void ICoroutineRunner.StopCoroutine(System.Collections.IEnumerator enumerator)
+        {
+            StopCoroutine(enumerator);
         }
     }
 }

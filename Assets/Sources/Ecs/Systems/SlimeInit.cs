@@ -35,8 +35,8 @@ namespace Sources.Ecs
             ref Transformable transformable = ref transformablePool.Add(slimeEntity);
 
             slimeShot.ShotPoint = _shotPoint;
-            slimeShot.Damage = _slimeSample.Damage;
-            slimeShot.Firerate = _slimeSample.Firerate;
+            slimeShot.IncreaseDamage(_slimeSample.StartDamage);
+            slimeShot.DecreaseFireRate(_slimeSample.StartFireRate);
 
             transformable.Transform = _slimeTransform;
         }

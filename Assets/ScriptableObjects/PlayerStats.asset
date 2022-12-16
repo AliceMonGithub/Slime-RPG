@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6fde68c81d273d43b9a16cf2131ad0e, type: 3}
-  m_Name: ZombieSample
+  m_Script: {fileID: 11500000, guid: 7f0895d3610987d48b134a0f38b09a54, type: 3}
+  m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 8304587312362914598, guid: 3e660650b90892a4c858074bcda7e5f5, type: 3}
-  _health: 10
-  _spawnRate: 0.2
-  _maxSpeed: 2.5
-  _smooth: 1
-  _stopDistance: 1.4
+  _startCoins: 200

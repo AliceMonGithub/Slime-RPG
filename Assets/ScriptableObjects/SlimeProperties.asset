@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09d44244a66c05146969644bd9b07fcb, type: 3}
   m_Name: SlimeProperties
   m_EditorClassIdentifier: 
-  _damage: 1
-  _firerate: 1.5
+  _startDamage: 5
+  _startFireRate: 1.1
   _bulletPrefab: {fileID: 6504104000433112964, guid: 4a306b9e8f2e0fc4f92e4eddf1b4b32b, type: 3}
-  _bulletSpeed: 5
-  _bulletSmooth: 0.1
+  _bulletSpeed: 20
+  _bulletSmooth: 0.01
   _damageDistance: 1
+  _fireDistance: 15

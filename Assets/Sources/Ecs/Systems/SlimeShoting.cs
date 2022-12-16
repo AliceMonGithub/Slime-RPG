@@ -30,24 +30,30 @@ namespace Sources.Ecs
 
         public void Run(IEcsSystems systems)
         {
+            NearTarget nearTarget = GetNearTarget(_slimeTransform.position, systems.GetWorld());
+
+            if (nearTarget == null) return;
+
+            if (Vector3.Distance(_slimeTransform.position, nearTarget.Transform.position) > _slimeSample.FireDistance) return;
+
             foreach (int entity in _slimesFilter)
             {
                 ref SlimeShotConfig slimeShot = ref _slimesPool.Get(entity);
 
                 slimeShot.FirerateDelta += Time.deltaTime;
 
-                if (slimeShot.FirerateDelta >= slimeShot.Firerate)
+                if (slimeShot.FirerateDelta >= slimeShot.FireRate)
                 {
                     EcsWorld world = systems.GetWorld();
 
-                    SpawnBullet(world, slimeShot);
+                    SpawnBullet(world, slimeShot, ref slimeShot);
 
                     slimeShot.FirerateDelta = 0;
                 }
             }
         }
 
-        private void SpawnBullet(EcsWorld world, SlimeShotConfig slimeShot)
+        private void SpawnBullet(EcsWorld world, SlimeShotConfig slimeShot, ref SlimeShotConfig slime)
         {
             int bulletEntity = world.NewEntity();
 
@@ -57,8 +63,12 @@ namespace Sources.Ecs
             ref Bullet bullet = ref bulletsPool.Add(bulletEntity);
             ref Transformable transformable = ref transformablePool.Add(bulletEntity);
 
-            bullet.Target = GetNearTarget(_slimeTransform.position, world);
-            bullet.Damage = _slimeSample.Damage;
+            NearTarget target = GetNearTarget(_slimeTransform.position, world);
+
+            world.GetPool<Health>().Get(target.Entity).IncreaseNextDamage(slime.Damage);
+
+            bullet.Target = target.Transform;
+            bullet.Damage = slime.Damage;
             bullet.MaxSpeed = _slimeSample.BulletSpeed;
             bullet.Smooth = _slimeSample.BulletSmooth;
             bullet.DamageDistance = _slimeSample.DamageDistance;
@@ -67,31 +77,58 @@ namespace Sources.Ecs
             transformable.Transform = _factory.Create(slimeShot.ShotPoint.position);
         }
 
-        private Transform GetNearTarget(Vector3 slimePosition, EcsWorld world)
+        private NearTarget GetNearTarget(Vector3 slimePosition, EcsWorld world)
         {
-            EcsFilter enemiesFilter = world.Filter<Transformable>().Inc<ZombieMoveConfig>().End();
+            EcsFilter enemiesFilter = world.Filter<Transformable>().Inc<ZombieMoveConfig>().Inc<Health>().End();
             EcsPool<Transformable> enemyTransformPool = world.GetPool<Transformable>();
+            EcsPool<Health> healthPool = world.GetPool<Health>();
 
             Transform near = null;
             float nearDistance = 0;
 
+            int entityIndex = 0;
+
             foreach (int entity in enemiesFilter)
             {
                 ref Transformable transformable = ref enemyTransformPool.Get(entity);
+                ref Health health = ref healthPool.Get(entity);
+
+                if (health.Value - health.NextDamage <= 0) continue;
 
                 if (near == null)
                 {
                     near = transformable.Transform;
                     nearDistance = Vector3.Distance(slimePosition, near.position);
+
+                    entityIndex = entity;
                 }
                 else if(Vector3.Distance(slimePosition, transformable.Transform.position) < nearDistance)
                 {
                     near = transformable.Transform;
                     nearDistance = Vector3.Distance(slimePosition, near.position);
+
+                    entityIndex = entity;
                 }
             }
 
-            return near;
+            if (near == null) return null;
+
+            return new NearTarget(near, entityIndex);
         }
+    }
+
+    internal class NearTarget
+    {
+        private readonly Transform _transform;
+        private readonly int _entity;
+
+        public NearTarget(Transform transform, int entity)
+        {
+            _transform = transform;
+            _entity = entity;
+        }
+
+        public Transform Transform => _transform;
+        public int Entity => _entity;
     }
 }

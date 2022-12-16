@@ -19,6 +19,8 @@ namespace Sources.Ecs
                 ref Bullet bullet = ref bulletsPool.Get(entity);
                 ref Transformable transformable = ref transformablePool.Get(entity);
 
+                if (bullet.Target == null) continue;
+
                 if (Vector3.Distance(transformable.Transform.position, bullet.Target.position) < bullet.DamageDistance)
                 {
                     TryTakeDamage(bullet.Damage, bullet.Target, world);
@@ -50,9 +52,7 @@ namespace Sources.Ecs
                 {
                     ref Health health = ref healthPool.Get(entity);
 
-                    health.Value -= value;
-
-                    Debug.Log(health.Value);
+                    health.DecreaseHealth(value);
                 }
             }
         }

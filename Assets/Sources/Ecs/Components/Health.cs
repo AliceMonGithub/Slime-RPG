@@ -1,18 +1,39 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Sources.Ecs
 {
     internal struct Health
     {
-        public event Action<int> OnHealthValueChanged;
+        public event Action<Health> OnHealthValueChanged;
 
-        public int Value;
+        public GameObject GameObject;
+        public int Entity;
 
-        public void TakeDamage(int damage)
+        private int _value;
+        private int _nextDamage;
+
+        public int Value => _value;
+        public int NextDamage => _nextDamage;
+
+        public void IncreaseHealth(int value)
         {
-            Value -= damage;
+            _value += value;
 
-            OnHealthValueChanged?.Invoke(Value);
+            OnHealthValueChanged?.Invoke(this);
+        }
+
+        public void DecreaseHealth(int value)
+        {
+            _value -= value;
+            _nextDamage -= value;
+
+            OnHealthValueChanged?.Invoke(this);
+        }
+
+        public void IncreaseNextDamage(int value)
+        {
+            _nextDamage += value;
         }
     }
 }

@@ -4769,8 +4769,24 @@ MonoBehaviour:
   - {fileID: 2088764196}
   - {fileID: 1535856267}
   - {fileID: 612930751}
-  _zombieProperties: {fileID: 11400000, guid: a48ab429ec3d86947b450bfadc796673, type: 2}
-  _slimeProperties: {fileID: 11400000, guid: ad8d74288ab49b941809eee3f4978dc8, type: 2}
+  _zombieSample: {fileID: 11400000, guid: a48ab429ec3d86947b450bfadc796673, type: 2}
+  _slimeSample: {fileID: 11400000, guid: ad8d74288ab49b941809eee3f4978dc8, type: 2}
+  _shopSample: {fileID: 11400000, guid: dae5d4b591d0a3b4ab4e2c4bffd88145, type: 2}
+  _playerStats: {fileID: 11400000, guid: dd32d6d570238524b983173c63f8e679, type: 2}
+  _shopUIConfig:
+    _damageUpgrade: {fileID: 1583054411}
+    _fireRateUpgrade: {fileID: 246720406}
+    _countersSmooth: 1
+    _damageCounter: {fileID: 877002554}
+    _fireRateCounter: {fileID: 1829963128}
+    _damageLevelCounter: {fileID: 1793962442}
+    _fireRateLevelCounter: {fileID: 942416006}
+    _damageValueCounter: {fileID: 877002554}
+    _fireRateValueCounter: {fileID: 877002554}
+    _damageUpgradeCostCounter: {fileID: 477394913}
+    _fireRateUpgradeCostCounter: {fileID: 98139458}
+  _coinsCounter: {fileID: 496687896}
+  _counterSmooth: 1
   _slimeTransform: {fileID: 1391926797}
   _shotPoint: {fileID: 148646347}
 --- !u!4 &1695630277
