@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: ZombieSample
   m_EditorClassIdentifier: 
   _prefab: {fileID: 3804281781143168797, guid: 3e660650b90892a4c858074bcda7e5f5, type: 3}
+  _damagePopup: {fileID: 4419282971591482985, guid: b5671f19f9b8c014e80e1a34ef2d5f1f, type: 3}
   _maxHealth: 10
   _killAward: 25
   _damage: 2
   _fireRate: 0.9
-  _spawnRate: 2
+  _spawnRate: 100
   _maxSpeed: 2.5
   _smooth: 1
   _stopDistance: 1.4

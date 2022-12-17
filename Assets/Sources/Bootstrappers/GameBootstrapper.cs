@@ -1,6 +1,7 @@
 ﻿using Leopotam.EcsLite;
 using Sources.Ecs;
 using Sources.Factories;
+using Sources.Providers;
 using Sources.ScriptableObjects;
 using TMPro;
 using UnityEngine;
@@ -19,6 +20,11 @@ namespace Sources.Bootstrappers
         [SerializeField] private ShopSample _shopSample;
 
         [SerializeField] private PlayerStats _playerStats;
+
+        [Space]
+
+        [SerializeField] private TileProvider[] _tiles;
+        [SerializeField] private TileProvider _startTile;
 
         [Space]
 
@@ -44,13 +50,14 @@ namespace Sources.Bootstrappers
 
             _systems
                 .Add(new SlimeInit(_slimeSample, _slimeTransform, _shotPoint))
-                .Add(new SliderHealthBar(_slimeHealthBar, _slimeSample))
+                .Add(new SliderHealthBar(_slimeHealthBar, _slimeSample, new PopupFactory(_zombieSample.DamagePopup)))
                 .Add(new CoinsCounter(_playerStats, _counterSmooth, _coinsCounter, this))
                 .Add(new ShopUI(_shopUIConfig, _playerStats, _shopSample, _slimeSample, this))
-                .Add(new ZombiesSpawn(new ZombieFactory(_zombieSample.Prefab), _slimeTransform, _zombieSpawnPoints, _playerStats, _zombieSample))
+                .Add(new ZombiesSpawn(new ZombieFactory(_zombieSample.Prefab), _slimeTransform, _zombieSpawnPoints, _playerStats, _zombieSample, this))
                 .Add(new ZombieMovement(_world, _slimeTransform, _zombieSample))
                 .Add(new SlimeShoting(_world, _slimeSample, _slimeTransform, new BulletFactory(_slimeSample.BulletPrefab)))
                 .Add(new BulletMovement())
+                .Add(new TilesSpawning(_tiles, _startTile, this))
                 .Init();
         }
 
@@ -78,6 +85,16 @@ namespace Sources.Bootstrappers
         void ICoroutineRunner.StopCoroutine(System.Collections.IEnumerator enumerator)
         {
             StopCoroutine(enumerator);
+        }
+
+        void ICoroutineRunner.Invoke(string name, float time)
+        {
+            Invoke(name, time);
+        }
+
+        void ICoroutineRunner.InvokeRepeating(string name, float time, float rate)
+        {
+            InvokeRepeating(name, time, rate);
         }
     }
 }

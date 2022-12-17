@@ -13,6 +13,8 @@ namespace Sources.Providers
 
         [SerializeField] private Transform _transform;
         [SerializeField] private Transform _root;
+        [SerializeField] private Transform _damagePopupPoint;
+
         [SerializeField] private Animator _animator;
 
         public GameObject BarCanvas => _barCanvas;
@@ -21,6 +23,8 @@ namespace Sources.Providers
 
         public Transform Transform => _transform;
         public Transform Root => _root;
+        public Transform DamagePopupPoint => _damagePopupPoint;
+
         public Animator Animator => _animator;
     }
 }

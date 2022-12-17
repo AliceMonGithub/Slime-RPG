@@ -6,7 +6,7 @@ namespace Sources.Ecs
 {
     internal class BulletMovement : IEcsRunSystem
     {
-        public static event Action<int> OnHit;
+        public static event Action<int, int> OnHit;
 
         public void Run(IEcsSystems systems)
         {
@@ -24,7 +24,9 @@ namespace Sources.Ecs
 
                 if (bullet.Target == null) continue;
 
-                if (Vector3.Distance(transformable.Transform.position, bullet.Target.position) < bullet.DamageDistance)
+                var distance = Vector3.Distance(transformable.Transform.position, bullet.Target.position + Vector3.up);
+
+                if (distance < bullet.DamageDistance)
                 {
                     TryTakeDamage(bullet.Damage, bullet.Target, world);
 
@@ -54,10 +56,11 @@ namespace Sources.Ecs
                 if(transformable.Transform == target)
                 {
                     ref Health health = ref healthPool.Get(entity);
+                    ref ZombieMoveConfig zombie = ref world.GetPool<ZombieMoveConfig>().Get(entity);
 
                     if(health.DecreaseHealth(value) == false)
                     {
-                        OnHit?.Invoke(entity);
+                        OnHit?.Invoke(entity, value);
                     }
                 }
             }

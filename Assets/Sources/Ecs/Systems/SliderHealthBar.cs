@@ -1,4 +1,5 @@
 ﻿using Leopotam.EcsLite;
+using Sources.Factories;
 using Sources.Properties;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,15 +12,19 @@ namespace Sources.Ecs
         private readonly Image _slimeSlider;
         private readonly ISlime _slimeSample;
 
+        private readonly PopupFactory _popupFactory;
+
         private EcsFilter _slimesFilter;
         EcsPool<Health> _healthPool;
 
         private EcsWorld _ecsWorld;
 
-        public SliderHealthBar(Image slimeSlider, ISlime slimeSample)
+        public SliderHealthBar(Image slimeSlider, ISlime slimeSample, PopupFactory popupFactory)
         {
             _slimeSlider = slimeSlider;
             _slimeSample = slimeSample;
+
+            _popupFactory = popupFactory;
         }
 
         public void Init(IEcsSystems systems)
@@ -32,6 +37,7 @@ namespace Sources.Ecs
             InitSlimeBar();
 
             BulletMovement.OnHit += UpdateZombieBar;
+            BulletMovement.OnHit += CreateDamagePopup;
         }
 
         public void Run(IEcsSystems systems)
@@ -62,12 +68,19 @@ namespace Sources.Ecs
             }
         }
 
-        private void UpdateZombieBar(int entity)
+        private void UpdateZombieBar(int entity, int damage)
         {
             ref ZombieMoveConfig zombie = ref _ecsWorld.GetPool<ZombieMoveConfig>().Get(entity);
             ref Health health = ref _ecsWorld.GetPool<Health>().Get(entity);
 
             zombie.Provider.BarSlider.fillAmount = (float)health.Value / health.MaxHealth;
+        }
+
+        private void CreateDamagePopup(int entity, int damage)
+        {
+            ref ZombieMoveConfig zombie = ref _ecsWorld.GetPool<ZombieMoveConfig>().Get(entity);
+
+            _popupFactory.Create(zombie.Provider.DamagePopupPoint.position, zombie.Provider.DamagePopupPoint).text = "-" + damage;
         }
 
         private void UpdateSlimeBar(Health health)
@@ -79,7 +92,7 @@ namespace Sources.Ecs
         {
             if(health.Value <= 0)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                SceneManager.LoadScene("Menu");
             }
         }
     }
